@@ -1,13 +1,15 @@
 import functools
 import itertools
 
+import numpy as np
+
 from adapter_covid19.enums import Region, Sector, Age
 
 from adapter_covid19.datasources import (
     Reader,
     SectorDataSource,
-    RegionSectorAgeDataSource,
 )
+from adapter_covid19.datasources_uk import RegionSectorAgeDataSource
 
 
 @functools.lru_cache()
@@ -20,7 +22,7 @@ def _base_lockdown_state(data_path: str) -> float:
     """
     reader = Reader(data_path)
     keyworker = SectorDataSource("keyworker").load(reader)
-    workers = RegionSectorAgeDataSource("workers").load(reader)
+    workers = RegionSectorAgeDataSource("workers", agg_func=np.sum).load(reader)
     return sum(
         keyworker[s] * workers[r, s, a]
         for r, s, a in itertools.product(Region, Sector, Age)
