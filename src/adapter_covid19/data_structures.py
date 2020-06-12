@@ -449,7 +449,7 @@ class Utilisations:
             raise ValueError("must supply one of `worker_data`, `reader`")
         self._utilisations = utilisations
         if worker_data is None:
-            worker_data = RegionSectorAgeDataSource("workers").load(reader)
+            worker_data = RegionSectorAgeDataSource("workers", agg_func=np.sum).load(reader)
         self._workers_by_region_sector = {
             (r, s, a): worker_data[r, s, a] / sum(worker_data[r, s, aa] for aa in Age)
             for r, s, a in itertools.product(Region, Sector, Age)
@@ -709,7 +709,7 @@ class Scenario:
         # }
         # for k, v in self.datasources.items():
         #     self.__setattr__(k, v(k).load(reader))
-        self.gdp = RegionSectorAgeDataSource("gdp", agg_func=np.mean).load(reader)
+        self.gdp = RegionSectorAgeDataSource("gdp", agg_func=np.sum).load(reader)
         self.workers = RegionSectorAgeDataSource("workers", agg_func=np.sum).load(reader)
         self.furloughed = SectorDataSource("furloughed").load(reader)
         self.keyworker = SectorDataSource("keyworker").load(reader)

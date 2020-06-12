@@ -104,12 +104,12 @@ class PersonalBankruptcyModel:
         to be called at development only
         """
         if self.workers_data is None:
-            self.workers_data = RegionSectorAgeDataSource("workers").load(reader)
+            self.workers_data = RegionSectorAgeDataSource("workers", agg_func=np.sum).load(reader)
 
         self._update_cache_mixture_weights()
 
         if self.credit_mean is None or self.credit_std is None:
-            credit_score = RegionDataSource("credit_score").load(reader)
+            credit_score = RegionDataSource("credit_score", agg_func=np.mean).load(reader)
             if self.credit_mean is None:
                 self.credit_mean = credit_score["mean"]
             if self.credit_std is None:
@@ -155,7 +155,7 @@ class PersonalBankruptcyModel:
         }
 
     def _init_earnings(self, reader: Reader) -> None:
-        annual_earnings = RegionSectorDecileSource("earnings").load(reader)
+        annual_earnings = RegionSectorDecileSource("earnings", agg_func=np.mean).load(reader)
 
         self.earnings = {
             (r, s, d): annual_earnings[(r, s, d)] / DAYS_IN_A_YEAR
@@ -164,7 +164,7 @@ class PersonalBankruptcyModel:
 
     def _init_detailed_expenses(self, reader: Reader) -> None:
         expenses_by_region_expense_sector_decile = RegionSectorDecileSource(
-            "expenses_full"
+            "expenses_full", agg_func=np.mean
         ).load(reader)
 
         self.detailed_expenses = self._extend_deciles_to_expenses(
@@ -194,7 +194,7 @@ class PersonalBankruptcyModel:
 
     def _init_detailed_min_expenses(self, reader: Reader) -> None:
         min_expenses_by_region_expense_sector_decile = RegionSectorDecileSource(
-            "min_expenses_full"
+            "min_expenses_full", agg_func=np.mean
         ).load(reader)
 
         self.detailed_min_expenses = self._extend_deciles_to_expenses(
