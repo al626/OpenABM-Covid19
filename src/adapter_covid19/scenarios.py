@@ -314,6 +314,28 @@ TEST_SCENARIO = Scenario(
     spread_model_params=SPREAD_MODEL_PARAMS,
 )
 
+SCENARIO_10_DAYS = Scenario(
+    lockdown_start_time=10,
+    lockdown_end_time=59,
+    furlough_start_time=5,
+    furlough_end_time=30,
+    simulation_end_time=202,
+    new_spending_day=5,
+    ccff_day=5,
+    loan_guarantee_day=5,
+    model_params=ModelParams(
+        economics_params={},
+        gdp_params={},
+        personal_params={
+            "default_th": 300,
+            "max_earning_furloughed": 30_000,
+            "alpha": 5,
+            "beta": 20,
+        },
+        corporate_params={"beta": 1.4, "large_cap_cash_surplus_months": 6,},
+    ),
+)
+
 SCENARIOS = {
     "basic": BASIC_SCENARIO,
     "slow_unlock": BASIC_SLOW_UNLOCK_SCENARIO,
@@ -323,5 +345,6 @@ SCENARIOS = {
     "no_corp_support": BASIC_NO_CORP_SUPPORT_SCENARIO,
     "no_furlough_no_corp_support": BASIC_NO_FURLOUGH_NO_CORP_SUPPORT_SCENARIO,
     "no_lockdown": BASIC_NO_LOCKDOWN_SCENARIO,
+    "scenario_10_days": SCENARIO_10_DAYS,
     "test": TEST_SCENARIO,
 }
