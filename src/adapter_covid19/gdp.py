@@ -695,18 +695,32 @@ class PiecewiseLinearCobbDouglasGdpModel(BaseGdpModel):
         ] = {}
 
     def _get_datasources(self) -> Mapping[str, DataSource]:
-        datasources = {
-            "gdp": RegionSectorAgeDataSource,
-            "workers": RegionSectorAgeDataSource,
-            "growth_rates": SectorDataSource,
-            "keyworker": SectorDataSource,
-            "vulnerability": SectorDataSource,
-            "wfh": SectorDataSource,
-            "input_output_intermediate": DataFrameDataSource,
-            "input_output_final": DataFrameDataSource,
-            "input_output_primary": DataFrameDataSource,
+        # datasources = {
+        #     "gdp": RegionSectorAgeDataSource,
+        #     "workers": RegionSectorAgeDataSource,
+        #     "growth_rates": SectorDataSource,
+        #     "keyworker": SectorDataSource,
+        #     "vulnerability": SectorDataSource,
+        #     "wfh": SectorDataSource,
+        #     "input_output_intermediate": DataFrameDataSource,
+        #     "input_output_final": DataFrameDataSource,
+        #     "input_output_primary": DataFrameDataSource,
+        # }
+        # return {k: v(k) for k, v in datasources.items()}
+
+        return {
+            "gdp": RegionSectorAgeDataSource("gdp", agg_func=np.sum),
+            "workers": RegionSectorAgeDataSource("workers", agg_func=np.sum),
+            "growth_rates": SectorDataSource("growth_rates"),
+            "keyworker": SectorDataSource("keyworker"),
+            "vulnerability": SectorDataSource("vulnerability"),
+            "wfh": SectorDataSource("wfh"),
+            "input_output_intermediate": DataFrameDataSource(
+                "input_output_intermediate"
+            ),
+            "input_output_final": DataFrameDataSource("input_output_final"),
+            "input_output_primary": DataFrameDataSource("input_output_primary"),
         }
-        return {k: v(k) for k, v in datasources.items()}
 
     def load(self, reader: Reader) -> None:
         super().load(reader)
