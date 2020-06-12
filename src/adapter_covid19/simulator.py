@@ -131,7 +131,7 @@ class Simulator:
         if show_plots:
             fig, axes = plt.subplots(7, 1, sharex="col", sharey="row", figsize=figsize)
             plot_one_scenario(
-                states, scenario.simulation_end_time, axes, title_prefix=scenario_name
+                states, axes, #scenario.simulation_end_time,
             )
 
         return econ, states
