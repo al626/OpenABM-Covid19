@@ -1,4 +1,5 @@
 import functools
+import logging
 import multiprocessing
 import os
 import pickle
@@ -16,6 +17,9 @@ from adapter_covid19.lockdown import get_lockdown_factor, get_working_factor
 from COVID19.model import Parameters, OccupationNetworkEnum
 
 import example_utils as utils
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def set_occupation_params(params: Parameters, model, value: float):
@@ -116,6 +120,9 @@ def run(scenario: Scenario, data_path: str, reload: bool = False) -> None:
         }
         with open(file_path, "wb") as f:
             pickle.dump(data, f)
+        LOGGER.info(f"Written data file to {file_path}")
+    else:
+        LOGGER.info(f"Not doing anything as {file_path} already exists")
 
 
 def get_spread_data(
@@ -146,6 +153,8 @@ def plot_spread_data(scenario: Scenario, data_path: str, reload: bool = False):
 if __name__ == "__main__":
     import sys
     from adapter_covid19.scenarios import SCENARIOS
+    
+    logging.basicConfig(level=logging.INFO)
 
     if len(sys.argv) < 2 or sys.argv[1].lower() not in SCENARIOS:
         valid = "|".join(SCENARIOS)
