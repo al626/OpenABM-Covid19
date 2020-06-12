@@ -666,7 +666,7 @@ class Scenario:
         default_factory=dict, init=False
     )
 
-    datasources: Mapping[str, Type[DataSource]] = field(default_factory=dict)
+    # datasources: Mapping[str, Type[DataSource]] = field(default_factory=dict)
     gdp: Mapping[Tuple[Region, Sector, Age], float] = field(default=None, init=False)
     workers: Mapping[Tuple[Region, Sector, Age], float] = field(
         default=None, init=False
@@ -691,13 +691,6 @@ class Scenario:
     is_loaded: bool = False
 
     def __post_init__(self):
-        self.datasources = {
-            "gdp": RegionSectorAgeDataSource,
-            "workers": RegionSectorAgeDataSource,
-            "furloughed": SectorDataSource,
-            "keyworker": SectorDataSource,
-            "wfh": SectorDataSource,
-        }
         if self.back_to_work_strategy is None:
             if self.slow_unlock:
                 raise ValueError(
@@ -707,8 +700,20 @@ class Scenario:
                 self.back_to_work_strategy = BackToWork.naive
 
     def load(self, reader: Reader) -> None:
-        for k, v in self.datasources.items():
-            self.__setattr__(k, v(k).load(reader))
+        # self.datasources = {
+        #     "gdp": RegionSectorAgeDataSource,
+        #     "workers": RegionSectorAgeDataSource,
+        #     "furloughed": SectorDataSource,
+        #     "keyworker": SectorDataSource,
+        #     "wfh": SectorDataSource,
+        # }
+        # for k, v in self.datasources.items():
+        #     self.__setattr__(k, v(k).load(reader))
+        self.gdp = RegionSectorAgeDataSource("gdp", agg_func=np.mean).load(reader)
+        self.workers = RegionSectorAgeDataSource("workers", agg_func=np.sum).load(reader)
+        self.furloughed = SectorDataSource("furloughed").load(reader)
+        self.keyworker = SectorDataSource("keyworker").load(reader)
+        self.wfh = SectorDataSource("wfh").load(reader)
         gdp_per_worker = {
             k: self.gdp[k] / self.workers[k]
             for k in itertools.product(Region, Sector, Age)
