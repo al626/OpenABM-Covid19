@@ -17,11 +17,13 @@ from adapter_covid19.data_structures import (
 )
 from adapter_covid19.datasources import (
     Reader,
-    RegionSectorAgeDataSource,
     SectorDataSource,
     WeightMatrix,
     DataSource,
     DataFrameDataSource,
+)
+from adapter_covid19.datasources_uk import (
+    RegionSectorAgeDataSource,
     RegionDataSource,
 )
 from adapter_covid19.enums import (
@@ -57,13 +59,19 @@ class BaseGdpModel(abc.ABC):
     @abc.abstractmethod
     def _get_datasources(self) -> Mapping[str, DataSource]:
         # TODO: This should really be a functools.cached_property, but no python 3.8
-        datasources = {
-            "gdp": RegionSectorAgeDataSource,
-            "workers": RegionSectorAgeDataSource,
-            "growth_rates": SectorDataSource,
-            "keyworker": SectorDataSource,
+        # datasources = {
+        #     "gdp": RegionSectorAgeDataSource,
+        #     "workers": RegionSectorAgeDataSource,
+        #     "growth_rates": SectorDataSource,
+        #     "keyworker": SectorDataSource,
+        # }
+        # return {k: v(k) for k, v in datasources.items()}
+        return {
+            "gdp": RegionSectorAgeDataSource("gdp", agg_func=np.sum),
+            "workers": RegionSectorAgeDataSource("workers", agg_func=np.sum),
+            "growth_rates": SectorDataSource("growth_rates"),
+            "keyworker": SectorDataSource("keyworker"),
         }
-        return {k: v(k) for k, v in datasources.items()}
 
     def _check_data(self) -> None:
         """

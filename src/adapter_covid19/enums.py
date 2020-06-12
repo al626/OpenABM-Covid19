@@ -1,4 +1,5 @@
 import enum
+import warnings
 from typing import Mapping
 
 
@@ -47,7 +48,7 @@ class Sector(OrderedEnum):
     T_HOUSEHOLD = "T: Activities of households"
 
 
-class Region(OrderedEnum):
+class RegionUK(OrderedEnum):
     C_NE = "UKC: North East"
     D_NW = "UKD: North West"
     E_YORKSHIRE = "UKE: Yorkshire and The Humber"
@@ -60,6 +61,10 @@ class Region(OrderedEnum):
     L_WALES = "UKL: Wales"
     M_SCOTLAND = "UKM: Scotland"
     N_NI = "UKN: Northern Ireland"
+
+
+class Region(OrderedEnum):
+    ALL = enum.auto()
 
 
 class Age(OrderedEnum):

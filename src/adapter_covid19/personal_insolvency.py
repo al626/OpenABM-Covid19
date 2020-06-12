@@ -11,8 +11,8 @@ from adapter_covid19.data_structures import (
     PersonalState,
     Utilisations,
 )
-from adapter_covid19.datasources import (
-    Reader,
+from adapter_covid19.datasources import Reader
+from adapter_covid19.datasources_uk import (
     RegionDataSource,
     RegionSectorAgeDataSource,
     RegionSectorDecileSource,

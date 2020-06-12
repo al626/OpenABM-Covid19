@@ -20,9 +20,9 @@ from adapter_covid19.constants import START_OF_TIME
 from adapter_covid19.datasources import (
     Reader,
     SectorDataSource,
-    RegionSectorAgeDataSource,
     DataSource,
 )
+from adapter_covid19.datasources_uk import RegionSectorAgeDataSource
 from adapter_covid19.enums import (
     LabourState,
     Region,

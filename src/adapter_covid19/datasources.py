@@ -1,7 +1,7 @@
 import abc
 import os
-from typing import Tuple, Mapping, Any, Union, Optional, Sequence
 import pickle
+from typing import Tuple, Mapping, Any, Union, Optional, Sequence
 
 import numpy as np
 import pandas as pd
